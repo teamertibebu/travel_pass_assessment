@@ -25,8 +25,8 @@ defmodule TravelPassCodeAssessment.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:httpoison, "~> 1.8"},
-      {:benchee, "~> 0.13", only: :dev}
+      {:mojito, "~> 0.7.10"},
+      {:mox, "~> 0.5.2", only: :test}
     ]
   end
 end

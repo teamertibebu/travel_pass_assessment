@@ -8,9 +8,15 @@ defmodule TravelPassAssessment.MetaWeatherAPI do
     "https://www.metaweather.com/api/location/2366355/"
   ]
 
+  @http_client Application.get_env(
+                 :travel_pass_code_assessment,
+                 :http_client,
+                 TravelPassAssessment.HttpClient.Client
+               )
+
   def get_avg_max_temps_async() do
     @urls
-    |> Task.async_stream(&HTTPoison.get/1)
+    |> Task.async_stream(&@http_client.http_mojito_get/1)
     |> Enum.into([], fn {:ok, res} -> elem(res, 1) end)
     |> Enum.map(&Jason.decode!(&1.body))
     |> handle_all_responses()
