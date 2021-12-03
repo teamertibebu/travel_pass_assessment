@@ -26,21 +26,17 @@ defmodule TravelPassAssessment.MetaWeatherAPI do
     |> Enum.map(&handle_response(&1))
   end
 
-  defp handle_response(response) do
-    case response do
-      {:ok, response_data} ->
-        response_data = Jason.decode!(response_data.body)
+  defp handle_response({:ok, response_data}) do
+    response_data = Jason.decode!(response_data.body)
 
-        city = response_data["title"]
-        consolidated_weather = response_data["consolidated_weather"]
-        avg_max_temp = calculate_avg_max_temp(consolidated_weather)
+    city = response_data["title"]
+    consolidated_weather = response_data["consolidated_weather"]
+    avg_max_temp = calculate_avg_max_temp(consolidated_weather)
 
-        "#{city} Average Max Temp: #{avg_max_temp}°F"
-
-      {:error, _} ->
-        "Request Could Not Be Completed"
-    end
+    "#{city} Average Max Temp: #{avg_max_temp}°F"
   end
+
+  defp handle_response({:error, _}), do: "Request Could Not Be Completed"
 
   defp calculate_avg_max_temp(consolidated_weather) do
     consolidated_weather
