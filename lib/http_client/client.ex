@@ -10,6 +10,6 @@ defmodule TravelPassAssessment.HttpClient.Client do
   @behaviour TravelPassAssessment.HttpClient.ClientBehaviour
 
   def http_mojito_get(url) do
-    IO.inspect(Mojito.get(url))
+    Mojito.get(url)
   end
 end

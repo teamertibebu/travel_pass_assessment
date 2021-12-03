@@ -1,9 +1,11 @@
-defmodule TravelPassAssessment.HttpClient.Response200Mock do
+defmodule TravelPassAssessment.HttpClient.Boise200ResponseMock do
+  @moduledoc """
+  This supplies mock MetaWeather API responses via Mox.
+  This GET request is specifically returning a 200 status with data representing a successful response from the Boise endpoint.
+  """
   @behaviour TravelPassAssessment.HttpClient.ClientBehaviour
 
   def http_mojito_get(_url) do
-    IO.inspect("blah blah blah blah")
-
     {:ok,
      %Mojito.Response{
        body:

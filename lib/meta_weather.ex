@@ -1,35 +1,45 @@
 defmodule TravelPassAssessment.MetaWeatherAPI do
   @moduledoc """
-  This module talks to the MetaWeather API & retrieves the max temperatures over a 6-Day forecast for the given cities. get_avg_max_temps_async/0 makes concurrent requests to the MetaWeather API with the given URLs and runs the data down a pipeline to parse and map the data accordingly.
+  This module talks to the MetaWeather API & retrieves the max temperatures over a 6-Day forecast for the given cities. get_avg_max_temps/0 makes concurrent requests to the MetaWeather API with the given URLs and runs the responses down a pipeline to parse & map the data accordingly.
   """
+
+  # this sets up a dynamic value for 'http_client', the values are determined by what environment you are running i.e. dev/test.
+  # This allows for mock API calls set up with Mox
+  def http_client() do
+    Application.get_env(
+      :travel_pass_code_assessment,
+      :http_client,
+      TravelPassAssessment.HttpClient.Client
+    )
+  end
+
   @urls [
     "https://www.metaweather.com/api/location/2487610/",
     "https://www.metaweather.com/api/location/2442047/",
     "https://www.metaweather.com/api/location/2366355/"
   ]
 
-  @http_client Application.get_env(
-                 :travel_pass_code_assessment,
-                 :http_client,
-                 TravelPassAssessment.HttpClient.Client
-               )
-
-  def get_avg_max_temps_async() do
+  def get_avg_max_temps() do
     @urls
-    |> Task.async_stream(&@http_client.http_mojito_get/1)
-    |> Enum.into([], fn {:ok, res} -> elem(res, 1) end)
-    |> Enum.map(&Jason.decode!(&1.body))
-    |> handle_all_responses()
+    |> Task.async_stream(&http_client().http_mojito_get/1)
+    |> Enum.into([], fn {:ok, res} -> res end)
+    |> Enum.map(&handle_response(&1))
   end
 
-  defp handle_all_responses(all_responses) do
-    Enum.map(all_responses, fn city_response ->
-      city = city_response["title"]
-      consolidated_weather = city_response["consolidated_weather"]
-      avg_max_temp = calculate_avg_max_temp(consolidated_weather)
+  defp handle_response(response) do
+    case response do
+      {:ok, response_data} ->
+        response_data = Jason.decode!(response_data.body)
 
-      "#{city} Average Max Temp: #{avg_max_temp}°F"
-    end)
+        city = response_data["title"]
+        consolidated_weather = response_data["consolidated_weather"]
+        avg_max_temp = calculate_avg_max_temp(consolidated_weather)
+
+        "#{city} Average Max Temp: #{avg_max_temp}°F"
+
+      {:error, _} ->
+        "Request Could Not Be Completed"
+    end
   end
 
   defp calculate_avg_max_temp(consolidated_weather) do
