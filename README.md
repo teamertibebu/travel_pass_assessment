@@ -1,4 +1,5 @@
-# TravelPassCodeAssessment
+# TravelPass Code Assessment
+**This is a barebones application used to show my understanding of the Elixir language.
 
 In order to use this application, you must interact w/ it in the IEX shell.
 
