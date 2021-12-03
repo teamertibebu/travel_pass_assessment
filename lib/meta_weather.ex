@@ -33,7 +33,7 @@ defmodule TravelPassAssessment.MetaWeatherAPI do
     consolidated_weather = response_data["consolidated_weather"]
     avg_max_temp = calculate_avg_max_temp(consolidated_weather)
 
-    "#{city} Average Max Temp: #{avg_max_temp}°F"
+    "#{city} Average Max Temp: #{avg_max_temp}°C"
   end
 
   defp handle_response({:error, _}), do: "Request Could Not Be Completed"
