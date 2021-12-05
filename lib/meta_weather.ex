@@ -21,7 +21,7 @@ defmodule TravelPassAssessment.MetaWeatherAPI do
     @urls
     |> Task.async_stream(&@http_client.http_mojito_get/1)
     |> Enum.into([], fn {:ok, res} -> res end)
-    |> Enum.map(&handle_response(&1))
+    |> Enum.map(&handle_response/1)
   end
 
   defp handle_response({:ok, response_data}) do
