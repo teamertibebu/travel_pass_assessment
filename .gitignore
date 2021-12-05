@@ -22,3 +22,8 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 travel_pass_code_assessment-*.tar
 
+# Ignore ElixirLS files
+/.elixir_ls
+
+# Ignore the config directory
+/.config

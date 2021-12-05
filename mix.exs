@@ -1,9 +1,9 @@
-defmodule TravelPassCodeAssessment.MixProject do
+defmodule TravelPassAssessment.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :travel_pass_code_assessment,
+      app: :travel_pass_assessment,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,

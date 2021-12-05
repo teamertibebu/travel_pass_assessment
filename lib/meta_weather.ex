@@ -5,13 +5,10 @@ defmodule TravelPassAssessment.MetaWeatherAPI do
 
   # this sets up a dynamic value for 'http_client', the values are determined by what environment you are running i.e. dev/test.
   # This allows for mock API calls set up with Mox
-  def http_client() do
-    Application.get_env(
-      :travel_pass_code_assessment,
-      :http_client,
-      TravelPassAssessment.HttpClient.Client
-    )
-  end
+  @http_client Application.compile_env(
+                 :travel_pass_assessment,
+                 :http_client
+               )
 
   @urls [
     "https://www.metaweather.com/api/location/2487610/",
@@ -19,9 +16,10 @@ defmodule TravelPassAssessment.MetaWeatherAPI do
     "https://www.metaweather.com/api/location/2366355/"
   ]
 
-  def get_avg_max_temps() do
+  @spec get_avg_max_temps :: list
+  def get_avg_max_temps do
     @urls
-    |> Task.async_stream(&http_client().http_mojito_get/1)
+    |> Task.async_stream(&@http_client.http_mojito_get/1)
     |> Enum.into([], fn {:ok, res} -> res end)
     |> Enum.map(&handle_response(&1))
   end
